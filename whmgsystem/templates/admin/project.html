@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+        <title>工时管理系统-项目管理</title>
+        <meta name="keywords" content="侧边导航菜单(可分组折叠)">
+        <meta name="description" content="侧边导航菜单(可分组折叠)" />
+        <meta name="HandheldFriendly" content="True" />
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <!-- Bootstrap3.3.5 CSS -->
+        <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="../static/css/date.css">
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+
+
+        <![endif]-->
+        <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-select.css">
+        <style>
+            .panel-group{max-height:770px;overflow: auto;}
+            .leftMenu{margin:10px;margin-top:5px;}
+            .leftMenu .panel-heading{font-size:14px;padding-left:20px;height:36px;line-height:36px;color:white;position:relative;cursor:pointer;}/*转成手形图标*/
+            .leftMenu .panel-heading span{position:absolute;right:10px;top:12px;}
+            .leftMenu .menu-item-left{padding: 2px; background: transparent; border:1px solid transparent;border-radius: 6px;}
+            .leftMenu .menu-item-left:hover{background:#C4E3F3;border:1px solid #1E90FF;}
+        </style>
+    </head>
+    <body style="background-color:#F2F2F2;padding-top:70px">
+        <div class="container-fluid">
+            <nav id="nav_top" class="navbar navbar-default navbar-fixed-top">
+              <div class="container">
+                  <a class="navbar-brand" href="#">
+                    <img alt="Brand" style="height: 28px" src="../static/images/logo/{{data['company'].logo_file}}">
+                  </a>
+                  <ul class="nav navbar-nav">
+                      <li ><a href="index"><span class="glyphicon glyphicon-list-alt"></span>&nbsp工时查询 </a></li>
+                    <li class="active"><a href="project"><span class="glyphicon glyphicon-edit"></span>&nbsp项目管理<span class="sr-only">(current)</span></a></li>
+                      <li><a href="manage"><span class="glyphicon glyphicon-cog"></span>&nbsp系统管理</a></li>
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right">
+                      <li ><a href="/user/index"><span class="glyphicon glyphicon-log-out"></span>&nbsp退出后台</span></a></li>
+                   </ul>
+              </div>
+            </nav>
+            <div class="row" >
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    {% include 'model/admin/selectProject' %}
+                    <div  style="margin:20px 0px">
+                        <form class="form-inline" id="add_user_form" action="addprojectuser" method="POST">
+
+                            <div class="form-group">
+                                  <label >权限分配: </label>
+                                <select class="form-control" id="company">
+                                    {% for c in data['companys'] %}
+                                  <option value="{{c.id}}">{{c.name}}</option>
+                                    {% endfor %}
+                                </select>
+                              </div>
+                              <div class="form-group">
+                                <select class="form-control" id="department">
+                                    <option value="">==请选择部门==</option>
+                                    {% for d in data['departments'] %}
+                                  <option value="{{d.id}}">{{d.name}}</option>
+                                    {% endfor %}
+                                </select>
+                              </div>
+                              <div class="form-group">
+                                <select class="selectpicker " multiple="true"  name="user_id" id="userselect" title="==请选择员工==">
+                                </select>
+                              </div>
+                            <input  name="project_id" value="{{data['current_project'].id}}" class="hidden">
+                            <button type="button" id="submit_add_user" class="btn btn-success">添加成员</button>&nbsp&nbsp&nbsp
+                            <button type="button" class="btn btn-primary " data-toggle="modal" data-target=".bs-example-modal-lg">添加项目</button>
+
+                        </form>
+                        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                              <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+
+                                   <form action="addproject" method="POST" style="margin:50px 50px">
+                                      <div style="margin:10px 10px">
+                                        <label >项目编号</label>
+                                        <input type="text" name="project_id" class="form-control" placeholder="请输入编号">
+                                      </div>
+                                      <div style="margin:10px 10px">
+                                        <label >项目名称</label>
+                                        <input type="text" name="project_name" class="form-control"  placeholder="请输入名称">
+                                      </div>
+                                      <div style="margin:10px 10px">
+                                        <label >所属部门</label>
+                                        <select class="form-control" name="department_id" >
+                                            <option value="">==请选择项目所属部门==</option>
+                                          {% for d in data['departments'] %}
+                                      <option value="{{d.id}}">{{d.name}}</option>
+                                        {% endfor %}
+                                        </select>
+                                      </div>
+                                     <div style="margin:10px 10px">
+                                        <label >负责人&nbsp</label>
+                                         <select class="form-control" id="department_user">
+                                          <option value="">==请选择部门==</option>
+                                          {% for d in data['departments'] %}
+                                          <option value="{{d.id}}">{{d.name}}</option>{% endfor %}
+                                        </select>
+                                         <br/>
+                                         <select class="form-control" name="user_id" id="project_user">
+                                          <option value="">==请先选择项目负责人所属部门==</option>
+                                        </select>
+                                         <br/>
+                                      </div>
+                                       <div >
+                                           <button type="submit" class="btn btn-lg btn-block btn-success" style="margin-bottom:5px">保存</button>
+
+                                           <div class="modal-footer"><button type="button" class="btn btn-default " data-dismiss="modal">Close</button></div>
+                                       </div>
+                                    </form>
+                                </div>
+                              </div>
+                            </div>
+                    </div>
+
+                     <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                            <th>项目编号</th>
+                          <th>项目名称</th>
+                          <th>创建日期</th>
+                            <th>所属部门</th>
+                            <th>项目负责人</th>
+                          <th>项目成员数</th>
+                            <th>项目状态</th>
+                            <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% if data['current_project'] :%}
+                        <tr>
+                            <th scope="row">{{data['current_project'].id}}</th>
+                              <td><span style="font-weight:bold ; color:red">{{data['current_project'].name}}</span></td>
+                              <td>{{data['current_project'].regtime}}</td>
+                            <td>{{data['current_project'].department.name}}</td>
+                            <td>{{data['current_project'].super_user.user}}</td>
+                            <td>{{get_length(data['current_project'].users)}}</td>
+                            {%if data['current_project'].status == -1%}
+                                <td style="color: red">已完成</td>
+                                <td>
+                                    <a href="upProjectType?project_id={{data['current_project'].id}}&type=0"><button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-play"></span></button></a>
+                            {%else%}
+                                <td style="color: #4cae4c;">进行中</td>
+                                <td>
+                                <a href="upProjectType?project_id={{data['current_project'].id}}&type=-1"><button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="标记完成"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button></a>
+                            {%endif%}
+                                    <a href="deleproject?project_id={{data['current_project'].id}}" onClick="return confirm('数据将无法找回，确定删除?');"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button></a>
+                                    <button type="button" id="up_project_button" class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-pencil"></span></button>
+                            </td>
+                        </tr>
+                      {% endif %}
+                      </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>姓名</th>
+                          <th>公司</th>
+                          <th>部门</th>
+                            <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% if data['current_project']%}
+                      {% for u in data['current_project'].get_valid_users() %}
+                        <tr>
+                          <th scope="row">{{loop.index}}</th>
+                          <td>{{u.user}}</td>
+                            <td>{{u.department.company.name}}</td>
+                            <td>{{u.department.name}}</td>
+                             <td><a href="deleProUser?user_id={{u.id}}&project_id={{data['current_project'].id}}" onClick="return confirm('数据将无法找回，确定删除?');"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button></a></td>
+
+                        </tr>
+                      {% endfor %}
+                      {%endif%}
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">修改项目-名称</h4>
+          </div>
+            <form method="post" action="up_project">
+          <div class="modal-body">
+              <input type="text" name="project_id" class="form-control" readonly="readonly"  value="{{data['current_project'].id}}">
+              <br>
+            <input type="text" name="project_name" class="form-control" placeholder="请输新名称">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+            </form>
+        </div>
+      </div>
+    </div>
+    {% include 'model/my_bottom' %}
+    </body>
+        <!-- jQuery1.11.3 (necessary for Bo otstrap's JavaScript plugins) -->
+        <script src="../static/scripts/jquery-2.1.4.min.js"></script>
+        <script src="../static/scripts/schedule.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="../static/scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../static/scripts/bootstrap-select.js"></script>
+    <script>
+         $(window).on('load', function () {
+                        $('.selectpicker').selectpicker({
+                            'selectedText': 'cat'
+                        });
+                    });
+    </script>
+        <script>
+        $(function(){
+            $(".panel-heading").click(function(e){
+                /*切换折叠指示图标*/
+                $(this).find("span").toggleClass("glyphicon-chevron-down");
+                $(this).find("span").toggleClass("glyphicon-chevron-up");
+            });
+        });
+
+        </script>
+        <script>
+        $("#submit_add_user").click(function(){
+            var users = $("#userselect").val()
+            var project_id = "{{data['current_project'].id}}"
+            window.location.href="addprojectuser?project_id="+project_id+"&users="+users
+
+        })
+
+        $("#department").bind("change",function(){
+            var department_id = $(this).val();
+            if(department_id==-''){
+                $("#userselect").html("")
+
+                $('.selectpicker').selectpicker('refresh');
+                return
+            }
+
+            $.post("/api/get_user",
+            {
+              department_id:department_id,
+              type:2,
+              project_id:'{{data['current_project'].id|default("-1")}}'
+            },
+            function(data,status){
+               if(status=='success'){
+                    var obj = JSON.parse(data);
+                    if(obj.status == true){
+                        var n = obj.user.length
+                        $("#userselect").html("")
+                        for (var i=0;i<n;i++)
+                        {
+                        $("#userselect").append("<option value='"+obj.user[i].id+"'>"+obj.user[i].name+"</option>");
+                        }
+                    }else{
+                        alert(obj.message)
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+               }
+            });
+        });
+
+        $("#company").bind("change",function(){
+            var company_id = $(this).val();
+            if(company_id==''){
+                $("#userselect").html("")
+                $("#userselect").append("<option value=''>==请选择员工==</option>");
+                $("#department").html("")
+                $("#department").append("<option value=''>==请选择部门==</option>");
+                return
+            }
+
+        $.post("/api/get_department",
+            {
+              company_id:company_id
+            },
+            function(data,status){
+               if(status=='success'){
+                    var obj = JSON.parse(data);
+                    if(obj.status == true){
+                        var n = obj.departments.length
+                        $("#userselect").html("")
+                        $("#userselect").append("<option value=''>==请选择员工==</option>");
+                        $("#department").html("")
+                        $("#department").append("<option value=''>==请选择部门==</option>");
+                        for (var i=0;i<n;i++)
+                        {
+                        $("#department").append("<option value='"+obj.departments[i].id+"'>"+obj.departments[i].name+"</option>");
+                        }
+                    }else{
+                        alert(obj.message)
+                    }
+               }
+            });
+        });
+         $("#department_user").bind("change",function(){
+            var department_id = $(this).val();
+
+            if(department_id==''){
+                $("#project_user").html("")
+                $("#project_user").append("<option value=''>==请先选择项目负责人所属部门==</option>");
+                return
+            }
+            $.post("/api/get_user",
+            {
+              department_id:department_id,
+              type:1
+            },
+            function(data,status){
+               if(status=='success'){
+                    var obj = JSON.parse(data);
+                    if(obj.status == true){
+                        var n = obj.user.length
+                        $("#project_user").html("")
+                        for (var i=0;i<n;i++)
+                        {
+                        $("#project_user").append("<option value='"+obj.user[i].id+"'>"+obj.user[i].name+"</option>");
+                        }
+                    }else{
+                        alert(obj.message)
+                    }
+               }
+            });
+        });
+        $(".project_selectpicker").bind("change",function(){
+            var pid = this.value
+            window.location.href="?project_id="+pid;
+        });
+        </script>
+    <script src="../static/scripts/my_script.js"></script>
+</html>

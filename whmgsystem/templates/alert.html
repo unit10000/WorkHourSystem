@@ -1,0 +1,6 @@
+<script>
+  var mess = "{{ message  | default('') }}"
+  if(mess!=""){alert(mess)}
+  var reurl = "{{ reurl  | default('') }}"
+  if(reurl==""){self.location=document.referrer;}else{window.location.href=reurl;}
+</script>

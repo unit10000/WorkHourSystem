@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+        <title>工时管理系统-系统管理</title>
+        <meta name="keywords" content="侧边导航菜单(可分组折叠)">
+        <meta name="description" content="侧边导航菜单(可分组折叠)" />
+        <meta name="HandheldFriendly" content="True" />
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <!-- Bootstrap3.3.5 CSS -->
+        <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="../static/css/date.css">
+        <link rel="stylesheet" href="../static/css/manage/manage.css">
+        <link rel="stylesheet" href="../static/css/manage/departmentInf.css">
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="../static/scripts/html5shiv.min.js"></script>
+        <script src="../static/scripts/respond.min.js"></script>
+        <![endif]-->
+        <style>
+            .panel-group{max-height:770px;overflow: auto;}
+            .leftMenu{margin:10px;margin-top:5px;}
+            .leftMenu .panel-heading{font-size:14px;padding-left:20px;height:36px;line-height:36px;color:white;position:relative;cursor:pointer;}/*转成手形图标*/
+            .leftMenu .panel-heading span{position:absolute;right:10px;top:12px;}
+            .leftMenu .menu-item-left{padding: 2px; background: transparent; border:1px solid transparent;border-radius: 6px;}
+            .leftMenu .menu-item-left:hover{background:#C4E3F3;border:1px solid #1E90FF;}
+        </style>
+    </head>
+    <body style="background-color:#F2F2F2;padding-top:70px">
+        <div class="container-fluid">
+            <nav id="nav_top" class="navbar navbar-default navbar-fixed-top">
+              <div class="container">
+                  <a class="navbar-brand" href="#">
+                    <img alt="Brand" style="height: 28px" src="../static/images/logo/{{data['company'].logo_file}}">
+                  </a>
+                  <ul class="nav navbar-nav">
+                      <li ><a href="index"><span class="glyphicon glyphicon-list-alt"></span>&nbsp工时查询 </a></li>
+                    <li ><a href="project"><span class="glyphicon glyphicon-edit"></span>&nbsp项目管理<span class="sr-only">(current)</span></a></li>
+                      <li class="active"><a href="manage"><span class="glyphicon glyphicon-cog"></span>&nbsp系统管理</a></li>
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right">
+
+                      <li ><a href="/user/index"><span class="glyphicon glyphicon-log-out"></span>&nbsp退出后台</span></a></li>
+                   </ul>
+              </div>
+            </nav>
+            <div class="row" >
+            <div class="col-md-2">
+                {% for d in data['company'].get_valid_departments() %}
+                    <div class="panel panel-primary leftMenu">
+                        <div class="panel-heading" id="collapseListGroupHeading{{d.id}}" data-toggle="collapse" data-target="#collapseListGroup{{d.id}}" role="tab" >
+                            <h4 class="panel-title">
+                                <a href="manage?department_id={{d.id}}">{{d.name}}</a>
+                                <span class="glyphicon glyphicon-chevron-down right"></span>
+                            </h4>
+                        </div>
+                        <div id="collapseListGroup{{d.id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading{{d.id}}">
+                            <ul class="list-group">
+                                        <a href="manage?type=user&department_id={{d.id}}"><li class="list-group-item">
+                                            <button class="menu-item-left">
+                                                <span class="glyphicon glyphicon-triangle-right"></span>成员管理
+                                            </button>
+                                          </li></a>
+
+                                            <a href="manage?type=project&department_id={{d.id}}"><li class="list-group-item">
+                                            <button class="menu-item-left">
+                                                <span class="glyphicon glyphicon-triangle-right"></span>进行中项目
+                                            </button>
+                                          </li></a>
+
+                                            <a href="manage?type=project_finish&department_id={{d.id}}"><li class="list-group-item">
+                                            <button class="menu-item-left">
+                                                <span class="glyphicon glyphicon-triangle-right"></span>已完成中项目
+                                            </button>
+                                          </li></a>
+                                            <a href="manage?type=project_all&department_id={{d.id}}"><li class="list-group-item">
+                                            <button class="menu-item-left">
+                                                <span class="glyphicon glyphicon-triangle-right"></span>全部项目
+                                            </button>
+                                          </li></a>
+                                        <a href="manage?department_id={{d.id}}"><li class="list-group-item">
+                                            <button class="menu-item-left">
+                                                <span class="glyphicon glyphicon-triangle-right"></span>详细信息
+                                            </button>
+                                          </li></a>
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+                <div class="col-md-10">
+
+                    {% include 'model/admin/manage/'+include_htm %}
+
+                </div>
+            </div>
+        </div>
+    {% include 'model/my_bottom' %}
+    </body>
+        <!-- jQuery1.11.3 (necessary for Bo otstrap's JavaScript plugins) -->
+        <script src="../static/scripts/jquery-2.1.4.min.js"></script>
+        <script src="../static/scripts/schedule.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="../static/scripts/bootstrap.min.js"></script>
+    <script>
+    </script>
+<script src="../static/scripts/my_script.js"></script>
+<script>
+    function setUpdata_User_Id(id){
+        $("#updata_user_id").val(id)
+    }
+
+</script>
+</html>

@@ -1,0 +1,29 @@
+
+<div id="div_container" style="text-align:center;margin:0 auto;background-color:#FFF">
+	<div id="my_div" class="fakeContainer first_div" style="padding:1px">
+		<table border="1" id="demoTable" style="margin-top:5px;border-collapse: collapse;">
+			<tr id="my_tr" class="my_title">
+
+			    <th class="center" colspan="1">成员\时间</th>
+			    <th class="center" colspan="1">总计(小时)</th>
+			    {% for date in data["dateList"] %}
+				<th class="center" colspan="1">{{date['date']}}<div style="text-align:center;">星期{{date['weekday']}}</div></th>
+				{% endfor %}
+			</tr>
+            {% if data["current_project"]%}
+            {% for user in data["current_project"].get_valid_users() %}
+			<tr>
+				<td class="center" id="td">{{user.user}}</td>
+                {% set work_hours = user.get_work_hours(data["current_project"].id,data['start_time'],data['end_time'])%}
+				<td class="center">{{sum_work_hours(work_hours)}}</td>
+                {% set work_hours_map = marge_work_hours(work_hours,data["dateList"]) %}
+				{% for h in work_hours_map.values() %}
+                   <td class="center red_text">{{h}}</td>
+				{% endfor %}
+			</tr>
+            {% endfor %}
+            {% endif%}
+		</table>
+		<span class="glyphicon glyphicon-fullscreen" id="tableScreen_button" data-toggle="tooltip" data-placement="top" title="全屏/退出全屏"></span>
+	</div>
+</div>

@@ -1,0 +1,31 @@
+<div class="Inf_table" style="background-color:#fff;overflow:auto;">
+<table class="table table-bordered table-hover">
+
+  <tbody id="work_time_thead">
+  {%if data['work_hours']%}
+    <thead>
+        <tr>
+          <th>#</th>
+            <th>项目编号</th>
+          <th>项目名称</th>
+          <th>工时</th>
+            <th>日期</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+    {% for work_hour in data["work_hours"] %}
+        <tr>
+          <th scope="row">{{loop.index}}</th>
+            <td>{{work_hour.project_id}}</td>
+          <td>{{work_hour.project.name}}</td>
+        <td><span style="font-weight:bold ; color: red">{{work_hour.worktime}}</span></td>
+            <td class="work_date">{{work_hour.date}}</td>
+          <td><a href="delework?work_id={{work_hour.id}}"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button></a></td>
+        </tr>
+      {% endfor %}
+  {%else%}
+    <h3 class="text-center" style="color:#999">暂无记录</h3>
+  {%endif%}
+  </tbody>
+</table>
+</div>

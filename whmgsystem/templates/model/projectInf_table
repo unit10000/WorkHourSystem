@@ -1,0 +1,37 @@
+<table class="table table-bordered">
+  <thead>
+    <tr>
+        <th>项目编号</th>
+      <th>项目名称</th>
+      <th>创建日期</th>
+        <th>所属部门</th>
+        <th>项目负责人</th>
+      <th>项目人数</th>
+        <th>项目状态</th>
+    </tr>
+  </thead>
+  <tbody>
+  {%if data['current_project']%}
+    <tr>
+      <th scope="row">{{data['current_project'].id}}</th>
+      <td><span style="font-weight:bold ; color:red">{{data['current_project'].name}}</span></td>
+      <td>{{data['current_project'].regtime}}</td>
+        <td>{{data['current_project'].department.name}}</td>
+        <td>{{data['current_project'].super_user.user}}</td>
+        <td>{{get_length(data['current_project'].users)}}</td>
+        {%if data['current_project'].status == -1%}
+            <td style="color: red">已完成</td>
+        {%else%}
+            <td style="color: #4cae4c;">进行中</td>
+        {%endif%}
+    </tr>
+  {%else%}
+    <!--
+    <script>
+        alert('您还没有加入任何项目，请联系管理员添加！')
+    </script>
+    -->
+  {%endif%}
+
+  </tbody>
+</table>

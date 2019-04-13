@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+        <title>工时管理系统-工时查询</title>
+        <meta name="keywords" content="侧边导航菜单(可分组折叠)">
+        <meta name="description" content="侧边导航菜单(可分组折叠)" />
+        <meta name="HandheldFriendly" content="True" />
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <!-- Bootstrap3.3.5 CSS -->
+        <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="../static/css/date.css">
+        <script>document.write("<link rel='stylesheet' href='../static/css/my_style.css?v=" + Date.now() + "'>");</script>
+        <script>document.write("<link rel='stylesheet' href='../static/css/superTables.css?v=" + Date.now() + "'>");</script>
+        <script>document.write("<link rel='stylesheet' href='../static/css/tableStyle.css?v=" + Date.now() + "'>");</script>
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="../static/scripts/html5shiv.min.js"></script>
+        <script src="../static/scripts/respond.min.js"></script>
+        <![endif]-->
+	    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-select.css">
+    <!-- 3.0 -->
+
+        <style>
+            .panel-group{max-height:770px;overflow: auto;}
+            .leftMenu{margin:10px;margin-top:5px;}
+            .leftMenu .panel-heading{font-size:14px;padding-left:20px;height:36px;line-height:36px;color:white;position:relative;cursor:pointer;}/*转成手形图标*/
+            .leftMenu .panel-heading span{position:absolute;right:10px;top:12px;}
+            .leftMenu .menu-item-left{padding: 2px; background: transparent; border:1px solid transparent;border-radius: 6px;}
+            .leftMenu .menu-item-left:hover{background:#C4E3F3;border:1px solid #1E90FF;}
+        </style>
+    </head>
+    <body style="background-color:#F2F2F2;padding-top:70px">
+        <div class="container-fluid">
+            <nav id="nav_top" class="navbar navbar-default navbar-fixed-top">
+              <div class="container">
+                  <a class="navbar-brand" href="#">
+                    <img alt="Brand" style="height: 28px" src="../static/images/logo/{{data['company'].logo_file}}">
+                  </a>
+                  <ul class="nav navbar-nav">
+                      <li class="active"><a href=""><span class="glyphicon glyphicon-list-alt"></span>&nbsp工时查询 <span class="sr-only">(current)</span></a></li>
+                    <li><a href="project"><span class="glyphicon glyphicon-edit"></span>&nbsp项目管理</a></li>
+                      <li><a href="manage"><span class="glyphicon glyphicon-cog"></span>&nbsp系统管理</a></li>
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right">
+
+                      <li ><a href="/user/index"><span class="glyphicon glyphicon-log-out"></span>&nbsp退出后台</span></a></li>
+                   </ul>
+              </div>
+            </nav>
+            <div class="row" >
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    {% include 'model/admin/selectProject' %}
+                    <br>
+                     <div>
+                         <form class="form-inline">
+                             <label >
+                                 起始日期:
+                             </label><div class="input-group">
+                          <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-calendar"></span></span>
+                             <input id="date1" value="{{data['start_time']}}" class="form-control" type="text" name="date" readonly="readonly" placeholder="点击选择日期"/></div>&nbsp&nbsp&nbsp&nbsp
+                             <label >结束日期: </label><div class="input-group">
+                             <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span><input id="date2" value="{{data['end_time']}}" class="form-control" type="text" name="date" readonly="readonly" placeholder="点击选择日期"/></div>
+                         <input type="button" name="" value="查询" onClick="selectSubmit()" class="btn btn-default">
+                             <input type="button" name="" value="下载报表" onClick="dowSubmit()" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="进行中的项目excel下载"><br/>
+                             <br/>
+
+                         </form>
+                    </div>
+                    {% include 'model/projectInf_table' %}
+
+
+                    {% include 'model/admin/select_excel' %}
+
+                </div>
+            </div>
+        </div>
+        <br><br><br><br><br><br><br><br><br><br>
+        {% include 'model/inputDateTime' %}
+{% include 'model/my_bottom' %}
+
+    </body>
+        <!-- jQuery1.11.3 (necessary for Bo otstrap's JavaScript plugins) -->
+        <script src="../static/scripts/jquery-2.1.4.min.js"></script>
+        <script src="../static/scripts/schedule.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="../static/scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../static/scripts/bootstrap-select.js"></script>
+    <script>
+
+
+        function dowSubmit(){
+            var startime = $("#date1").val()
+            var endtime = $("#date2").val()
+            window.location.href="dowExcel?project_id={{data["current_project"].id}}&startime="+startime+"&endtime="+endtime;
+        }
+        function selectSubmit(){
+            var startime = $("#date1").val()
+            var endtime = $("#date2").val()
+            window.location.href="?project_id={{data["current_project"].id}}&startime="+startime+"&endtime="+endtime;
+        }
+        function setSelectDate(y,m,d){
+            str=y+'-'
+            if(m<10){str+='0'+m}else{str +=m}
+            str+='-'
+            if(d<10){str+='0'+d}else{str+=d}
+            document.querySelector('#'+inputDateName).value = str
+        }
+
+    </script>
+        <script>
+        $(function(){
+            $(".panel-heading").click(function(e){
+                /*切换折叠指示图标*/
+                $(this).find("span").toggleClass("glyphicon-chevron-down");
+                $(this).find("span").toggleClass("glyphicon-chevron-up");
+            });
+        });
+
+
+    $(".selectpicker").bind("change",function(){
+            var pid = this.value
+            var startime = $("#date1").val()
+            var endtime = $("#date2").val()
+             window.location.href="?project_id="+pid+"&startime="+startime+"&endtime="+endtime;
+        });
+
+        $("#tableScreen_button").click(function(){
+            if(tableScreen.status){
+                //  退出
+                tableScreen.out();
+            }else{
+                //  全屏
+                tableScreen.in();
+                var height = window.screen.height
+                var width =  window.screen.width
+                setScreenSize(height,width)
+            }
+            //test.out();
+        });
+
+        //监听退出全屏事件
+        window.onresize = function() {
+            if (!tableScreen.status) {
+                //要执行的动作
+                setScreenSize(500,"100%")
+                tableScreen.status = false;
+            }
+        }
+
+        </script>
+        <script type="text/javascript">
+                    $(window).on('load', function () {
+                        $('.selectpicker').selectpicker({
+                            'selectedText': 'cat'
+                        });
+                    });
+        </script>
+        <script>document.write("<script type='text/javascript' src='../static/scripts/superTables.js?v=" + Date.now() + "'><\/script>");</script>
+        <script>document.write("<script type='text/javascript' src='../static/scripts/my_inputDate.js?v=" + Date.now() + "'><\/script>");</script>
+        <script>document.write("<script type='text/javascript' src='../static/scripts/my_script.js?v=" + Date.now() + "'><\/script>");</script>
+    <script src="../static/scripts/fullScreen.js"></script>
+
+
+    <script type="text/javascript">
+
+        //此处调用superTables.js里需要的函数
+        window.onload=function(){
+            new superTable("demoTable", {cssSkin : "sDefault",
+                fixedCols : 2, //固定几列
+                headerRows :1,  //头部固定行数
+                onStart : function () {
+                   this.start = new Date();
+                },
+                onFinish : function () {
+                }
+            });
+            setScreenSize(500,"100%")
+
+            //目前谷歌  ie8+  360浏览器均没问题  有些细小的东西要根据项目需求改
+
+            //有兼容问题的话可以在下面判断浏览器的方法里写
+            if(navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion.match(/9./i)=="9.")
+            {//alert("IE 9.0");
+
+            }else if (!!window.ActiveXObject || "ActiveXObject" in window){//alert("IE 10");
+
+            }else{//其他浏览器
+                //alert("其他浏览器");
+            }
+        }
+        var tableScreen = new FullScreen("#div_container");
+
+
+    </script>
+</html>

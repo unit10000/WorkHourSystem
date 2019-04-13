@@ -1,0 +1,11 @@
+
+<div class="left">
+			<div class="bigTitle">后台管理系统</div>
+
+			<div class="lines">
+				<a href="index"><div class="company_menu"><span class="glyphicon glyphicon-th-large"> </span>&nbsp&nbsp 公司管理</div></a>
+				<a href="admin_manage"><div class="admin_menu"> <span class="glyphicon glyphicon-user"></span>&nbsp&nbsp 管理员</div></a>
+				<a href="jindee"><div class="jindee_menu"> <span class="glyphicon glyphicon-hdd"></span>&nbsp&nbsp 金蝶</div></a>
+				<a href="system"><div  class="system_menu"> <span class="glyphicon glyphicon-blackboard"></span>&nbsp&nbsp  系统环境</div></a>
+			</div>
+		</div>

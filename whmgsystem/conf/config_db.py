@@ -1,0 +1,3 @@
+DEBUG = True
+SQLALCHEMY_DATABASE_URI = 'sqlite:///WHMGSystem.db'#此为相对路径
+SQLALCHEMY_TRACK_MODIFICATIONS = False

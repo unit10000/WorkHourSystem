@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+        <title>工时管理系统-工时填报</title>
+        <meta name="keywords" content="侧边导航菜单(可分组折叠)">
+        <meta name="description" content="侧边导航菜单(可分组折叠)" />
+        <meta name="HandheldFriendly" content="True" />
+        <!-- Bootstrap3.3.5 CSS -->
+        <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="../static/css/date.css">
+        <link rel="stylesheet" href="../static/css/bootstrap-select.css">
+        <link rel="stylesheet" href="../static/css/my_style.css">
+        <script src="../static/scripts/html5shiv.min.js"></script>
+        <script src="../static/scripts/respond.min.js"></script>
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+
+        <![endif]-->
+        <style>
+            .panel-group{max-height:770px;overflow: auto;}
+            .leftMenu{margin:10px;margin-top:5px;}
+            .leftMenu .panel-heading{font-size:14px;padding-left:20px;height:36px;line-height:36px;color:white;position:relative;cursor:pointer;}/*转成手形图标*/
+            .leftMenu .panel-heading span{position:absolute;right:10px;top:12px;}
+            .leftMenu .menu-item-left{padding: 2px; background: transparent; border:1px solid transparent;border-radius: 6px;}
+            .leftMenu .menu-item-left:hover{background:#C4E3F3;border:1px solid #1E90FF;}
+        </style>
+        <link rel="stylesheet" href="../static/css/my_particles.css">
+    </head>
+    <body style="background-color:#F2F2F2;padding-top:70px">
+    {% include 'model/my_particles' %}
+        <div class="container-fluid">
+            <nav id="nav_top" class="navbar navbar-default navbar-fixed-top">
+              <div class="container">
+                <a class="navbar-brand" href="#">
+                            <img alt="Brand" style="height: 28px" src="../static/images/logo/{{data['company'].logo_file}}">
+                          </a>
+                  <ul class="nav navbar-nav">
+                    <li class="active"><a href="index"><span class="glyphicon glyphicon-pencil"></span>&nbsp工时填报<span class="sr-only">(current)</span></a></li>
+                      <li class=""><a href="selectworktime"><span class="glyphicon glyphicon-search"></span>&nbsp工时查询 </a></li>
+                      <li class=""><a href="makebom"><span class="glyphicon glyphicon-stats"></span>&nbspBOM制作 </a></li>
+                      <!--<li ><a href="/index">返回旧版</span></a></li>-->
+                      <li role="presentation" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                          hello，{{data['user'].user}} <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="loginout"><span class="glyphicon glyphicon-log-out"></span>&nbsp注销账号</a></li>
+                        </ul>
+                      </li>
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right">
+                      <li class=""><a href="/admin"><span class="glyphicon glyphicon-user"></span>&nbsp后台管理 </a></li>
+                   </ul>
+              </div>
+            </nav>
+            <div class="row" >
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    {% include 'model/projectInf_table' %}
+                    {% include 'model/user/selectProject' %}
+                        <br>
+                    <br>
+                     <div>
+
+                       <form class="form-inline" action="upworktime" method="post">
+                       <label for="id_select">日期: </label>&nbsp
+                       <div class="input-group">
+                          <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-calendar"></span></span>
+                         <input style="color: red" id="date3" name="date" class="form-control" type="text" name="date" readonly="readonly" placeholder="点击选择日期"/>
+                       </div>
+                           &nbsp&nbsp&nbsp
+                            <label for="id_select">工作工时: </label>&nbsp<input name="worktime" id="work_time_input" class="form-control" type="text" placeholder="请填写工时"/>&nbsp
+                         <input name="project_id" id="project_id_input" value="{{data['current_project'].id}}" class="form-control hidden" type="text" readonly="readonly" placeholder="项目编号"/>&nbsp;
+                           <!--%if tableData["project_inf"][0] not in inProjectId -->
+                           <!--&lt;!&ndash;<a href="/addprojectuser?project_id=tableData["project_inf"][0]}}">&ndash;&gt;-->
+                            <!--<input type="button"  id="" name=""   value="加入项目" class="btn btn-info disabled" data-toggle="tooltip" data-placement="top" title="加入该项目">-->
+                           <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                            <!--endif-->
+                           <!--if tableData["project_inf"][0] in inProjectId -->
+                           <button type="submit" id="submit_wh_button_**" name=""  class="btn btn-success" data-toggle="tooltip" data-placement="top" title="提交或更新"><span class="glyphicon glyphicon-open"></span>&nbsp提交</button>
+                            <!--%endif%}-->
+                          <br/>
+                             </form>
+                         <br>
+                             {% include 'model/inputDateTime' %}
+                    </div>
+                    <br>
+                    <label for="id_select">当天提交记录: </label><br>
+
+                    {% include 'model/user/workHours_table' %}
+                    <br>
+                </div>
+            </div>
+        </div>
+
+        {% include 'model/my_bottom' %}
+    </body>
+        <!-- jQuery1.11.3 (necessary for Bo otstrap's JavaScript plugins) -->
+        <script src="../static/scripts/jquery-2.1.4.min.js"></script>
+        <script src="../static/scripts/schedule.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="../static/scripts/bootstrap.min.js"></script>
+        <script src="../static/scripts/hullabaloo.js"></script>
+        <script type="text/javascript" src="../static/scripts/bootstrap-select.js"></script>
+        <script type="text/javascript" src="../static/scripts/my_inputDate.js"></script>
+        <script src="../static/scripts/particles.js"></script>
+        <script src="../static/scripts/my_particlesconf_black.js"></script>
+<script type="text/javascript">
+     $.hulla = new hullabaloo();
+
+    setTimeout(function() {
+      $.hulla.send("Hi！选择项目、选择日期、输入工时、提交，完毕！", "success");
+    }, 1000);
+
+    $(".selectpicker").bind("change",function(){
+            var pid = this.value
+            var startime = $("#date1").val()
+            var endtime = $("#date2").val()
+             window.location.href="index?project_id="+pid+"&startime="+startime+"&endtime="+endtime;
+        });
+                    $(window).on('load', function () {
+                        $('.selectpicker').selectpicker({
+                            'selectedText': 'cat'
+                        });
+                    });
+        </script>
+        <script src="../static/scripts/my_script.js"></script>
+</html>

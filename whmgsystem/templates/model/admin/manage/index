@@ -1,0 +1,103 @@
+<div class="Inf_box" style="background-color:#fff">
+                    {% if data['current_department']: %}
+                    <h4 class="departmentInf">{{data['current_department'].name}}</h4>
+                        <div class="departmentInf">
+                            <span >名称：</span>
+                            <strong class="text-uppercase">{{data['current_department'].name}}</strong>
+                        </div>
+
+                        <div class="departmentInf">
+                            <span >所属公司：</span>
+                            <strong class="text-uppercase">{{data['current_department'].company.name}}</strong>
+                        </div>
+
+                        <div class="departmentInf">
+                            <span >部门人数：</span>
+                            <strong ><a href="?type=user&department_id={{data['current_department'].id}}">{{get_length(data['current_department'].users)}}</a></strong>
+                        </div>
+
+                        <div class="departmentInf">
+                            <span >所有项目数：</span>
+                            <strong ><a href="">{{get_length(data['current_department'].projects)}}</a></strong>
+                        </div>
+
+                        <div class="departmentInf">
+                            <span >进行中项目数：</span>
+                            <strong ><a href="">{{get_length(data['current_department'].get_valid_projects())}}</a></strong>
+                        </div>
+
+                        <div class="departmentInf">
+                            <span >已完成项目数：</span>
+                            <strong ><a href="">{{get_length(data['current_department'].get_finish_projects())}}</a></strong>
+                        </div>
+                        <div class="departmentInf">
+                            <span >创建时间：</span>
+                            <strong >{{data['current_department'].regtime}}</strong>
+                        </div>
+                        {% endif %}
+                        <div class="departmentInf">
+                            <span >操作：</span>
+                            <a href="deledepartment?department_id={{data['current_department'].id}}" onClick="return confirm('数据将无法找回，确定删除?');">删除部门</a>
+                            &nbsp&nbsp<a href="" data-toggle="modal" data-target="#myModal">修改名称</a>
+                            &nbsp&nbsp<a href="" data-toggle="modal" data-target="#addDepartmentModal">添加部门</a>
+                        </div>
+                    <div>
+                    <div style="margin:20px 0px">
+                        <!--<form class="form-inline" action="addepartment" method="POST">-->
+                              <!--<div class="form-group">-->
+                                <!--<label >添加部门：</label>-->
+                                <!--<input type="text" name="department_name" class="form-control"  placeholder="请输入部门名称">-->
+                              <!--</div>-->
+                            <!--<button type="submit" class="btn btn-success">添加</button>-->
+                        <!--</form>-->
+                    </div>
+
+                      <!-- 修改部门名称Modal -->
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">修改部门-名称</h4>
+                          </div>
+                            <form method="post" action="up_department">
+                          <div class="modal-body">
+                              <input type="text" name="department_id" class="form-control hidden" readonly="readonly"  value="{{data['current_department'].id}}">
+                              <br>
+                            <input type="text" name="new_name" class="form-control" placeholder="请输新名称">
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                          </div>
+                            </form>
+                        </div>
+                      </div>
+                    </div>
+
+                            <!-- 添加部门Modal -->
+                    <div class="modal fade" id="addDepartmentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="addDepartmentLabel">添加部门</h4>
+                          </div>
+                            <form method="post" action="addepartment">
+                          <div class="modal-body">
+                              <br>
+                            <input type="text" name="department_name" class="form-control" placeholder="请输部门名称">
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                          </div>
+                            </form>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                </div>
+            </div>

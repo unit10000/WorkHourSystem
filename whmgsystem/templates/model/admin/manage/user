@@ -1,0 +1,75 @@
+<div class="Inf_box" style="background-color:#fff">
+    <div  style="margin:20px 0px">
+    <h3>{{data['current_department'].name}}</h3><br>
+    <form class="form-inline" action="/register" method="POST">
+         <div class="form-group">
+            <label >姓名：</label>
+             <input type="text" name="user" class="form-control" placeholder="请输入姓名">
+          </div>
+         <div class="form-group">
+            <label >密码：</label>
+             <input type="text" name="pass" class="form-control" placeholder="请输入密码" value="000000">
+             <input type="text" name="department_id" class="form-control hidden" readonly="readonly"  value="{{data['current_department'].id}}">
+          </div>
+
+        <button type="submit" class="btn btn-success">添加用户</button>
+    </form>
+</div>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>姓名</th>
+      <th>部门</th>
+      <th>注册时间</th><th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for u in data['current_department'].users %}
+    <tr>
+      <th scope="row">{{loop.index}}</th>
+      <td>{{u.user}}</td>
+        <td>{{data['current_department'].name}}</td>
+        <td>{{u.regtime}}</td>
+      <td>
+        <a href="deleuser?user_id={{u.id}}" onClick="return confirm('数据将无法找回，确定删除?');"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button></a>
+        {% if u.status >-1 %}
+        <a href="up_user_status?user_id={{u.id}}&status=-1" onClick="return confirm('是否禁用该用户?');"><button type="button" class="btn btn-success"><span class="glyphicon  glyphicon-ok"></span></button></a>
+        {% else %}
+        <a href="up_user_status?user_id={{u.id}}&status=0" onClick="return confirm('是否激活该用户?');"><button type="button" class="btn btn-warning"><span class="glyphicon  glyphicon-remove"></span></button></a>
+        {%endif%}
+        <button class="btn btn-info glyphicon glyphicon-resize-horizontal" onclick="setUpdata_User_Id('{{u.id}}')" data-toggle="modal" data-target="#updata_user"></button>
+        <a href="refreshPW?user_id={{u.id}}" onClick="return confirm('是否重置用户密码?');"><button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-repeat"></span></button></a>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+ <!-- 修改部门Modal -->
+<div class="modal fade" id="updata_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">修改部门</h4>
+      </div>
+        <form method="post" action="/admin/up_user_department">
+      <div class="modal-body">
+          <input type="text" name="user_id" id="updata_user_id" class="form-control hidden" readonly="readonly"  value="2" />
+          <br>
+        <select  class="form-control" name="department_id">
+                                    {% for d in data['company'].get_valid_departments() %}
+                                  <option value="{{d.id}}">{{d.name}}</option>
+                                    {% endfor %}
+
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary">保存</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>

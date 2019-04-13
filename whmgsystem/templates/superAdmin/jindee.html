@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>首页</title>
+		<link rel="stylesheet" href="../static/css/super_admin/page.css">
+		<link href="../static/css/bootstrap.min.css" rel="stylesheet">
+	</head>
+	<body style="background-color:#F2F2F2;">
+		{% include 'model/superAdmin/menu' %}
+		<div class="top">
+			<div class="leftTiyle" id="flTitle">金蝶数据库配置</div>
+			<div class="thisUser">当前用户：{{current_user.user}}&nbsp&nbsp<a href="/user/loginout">退出</a></div>
+		</div>
+		<div class="content">
+			<div class="pull-left">
+				<form class="form-inline pull-left" id="add_user_form" action="add_jindee_config" method="POST">
+					<label > </label>&nbsp<input name="name" id="work_time_input" class="form-control" type="text" placeholder="配置名称"/>
+					&nbsp<input name="userName" class="form-control" type="text" placeholder="数据库账号"/>
+					&nbsp<input name="userPw"  class="form-control" type="text" placeholder="数据库密码"/>
+					&nbsp<input name="DBAddress"  class="form-control" type="text" placeholder="数据库地址"/>
+					&nbsp<input name="DBName"  class="form-control" type="text" placeholder="数据库名称"/>
+					<button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>&nbsp;新增</button>
+				</form>
+				</div>
+			<br>
+			<br>
+			<div>
+
+				<table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>配置名称</th>
+                          <th>数据库账号</th>
+                          <th>数据库密码</th>
+                            <th>连接地址</th>
+							<th>数据库名称</th>
+							<th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for j in data['jindees'] %}
+                        <tr>
+                          <th scope="row">{{loop.index}}</th>
+                          <td>{{j.name}}</td>
+                            <td>{{j.userName}}</td>
+                            <td>{{j.userPw}}</td>
+							<td>{{j.DBAddress}}</td>
+							<td>{{j.DBName}}</td>
+                             <td><a href="delejindee?jindee_id={{j.id}}" onClick="return confirm('数据将无法找回，确定删除?');"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button></a>
+							 <button type="button" id="up_project_button" class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-pencil"></span></button>
+							 </td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+
+				</table>
+				<br>
+
+			</div>
+		</div>
+
+	</body>
+	<script type="text/javascript" src="../static/scripts/jquery-2.1.4.min.js" ></script>
+	<script type="text/javascript" src="../static/scripts/superuserindex.js" ></script>
+	<script src="../static/scripts/bootstrap.min.js"></script>
+	<script>$(".{{data['menu']}}").addClass("active")</script>
+</html>

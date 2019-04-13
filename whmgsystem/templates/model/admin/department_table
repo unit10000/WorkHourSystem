@@ -1,0 +1,25 @@
+<div class="col-md-2">
+{% for d in data['departments'] %}
+    <div class="panel panel-primary leftMenu">
+        <div class="panel-heading" id="collapseListGroupHeading{{d.id}}" data-toggle="collapse" data-target="#collapseListGroup{{d.id}}" role="tab" >
+            <h4 class="panel-title">
+                {{d.name}}
+                <span class="glyphicon glyphicon-chevron-down right"></span>
+            </h4>
+        </div>
+        <div id="collapseListGroup{{d.id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading{{d.id}}">
+            <ul class="list-group">
+                {% for p in d.projects %}
+                    {%if p.status > -1%}
+                        <a href="?project_id={{p.id}}"><li class="list-group-item">
+                            <button class="menu-item-left">
+                                <span class="glyphicon glyphicon-triangle-right"></span>{{p.name}}
+                            </button>
+                          </li></a>
+                    {%endif%}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endfor %}
+</div>

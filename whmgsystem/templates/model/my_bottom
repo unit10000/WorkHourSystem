@@ -1,0 +1,7 @@
+
+        <div id="my_bottom" class="navbar navbar-inverse text-muted" style="border-radius:0px;background: #ffffff;border-color:#ddd;margin-bottom:0px;">
+
+            <div class="container center-block" align="center">
+                &#169;{{data['company'].name}}<br>2018-12-04
+          </div>
+        </div>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>工时管理系统-系统初始化</title>
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=PT+Sans:400,700'>
+    <link rel="stylesheet" href="../static/css/reset.css">
+    <link rel="stylesheet" href="../static/css/supersized.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/my_particles.css">
+</head>
+<body>
+    {% include 'model/my_particles' %}
+    <div class="page-container" >
+            <h1>系统初始化</h1>
+            <form action="init_system" method="post">
+                <input type="text" name="user" class="username" placeholder="超级管理员账号">
+                <input type="password" name="pass" class="password" placeholder="超级管理员密码">
+                <button type="submit">保&nbsp存</button>
+                <div class="error"><span>+</span></div>
+            </form>
+            <div class="connect">
+            </div>
+        </div>
+        <!-- Javascript -->
+        <script src="../static/scripts/jquery-2.1.4.min.js"></script>
+        <script src="../static/scripts/supersized.3.2.7.min.js"></script>
+        <script src="../static/scripts/supersized-init.js"></script>
+        <script src="../static/scripts/scripts.js"></script>
+        <script src="../static/scripts/particles.js"></script>
+        <script src="../static/scripts/my_particlesconf_white.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+.Inf_box{
+    margin:8px 4px;
+    padding:12px;
+    border: 1px solid #ddd;
+}
+a{
+    text-decoration: none;
+    color:#006eff;
+}
+a:hover{
+}
+.list-group>a{
+    color:#000;
+}

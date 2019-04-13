@@ -1,0 +1,23 @@
+<form id="bom_select_project" class="form-inline" hidden="hidden"  style="position: absolute;">
+    <div class="form-group">
+        <select  id="id_select" class="selectpicker bla bla bli"  data-live-search="true" title="项目搜索...">
+            <optgroup label="我的项目" data-subtext="进行中" data-icon="icon-ok">
+            <option >#请选择项目#</option>
+            {% for p in data['projects']%}
+                {%if p.status>-1 %}
+
+            <option value="{{p.id}}">{{p.name}}</option>
+                {%endif%}
+            {% endfor %}
+            </optgroup>
+            <optgroup label="我的项目" data-subtext="已完结" data-icon="icon-ok">
+
+                {% for p in data['projects']%}
+                {%if p.status==-1 %}
+                <option value="{{p.id}}">{{p.name}}</option>
+                {%endif%}
+                {% endfor %}
+            </optgroup>
+        </select>
+    </div>
+</form>

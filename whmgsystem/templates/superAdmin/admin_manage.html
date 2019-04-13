@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>首页</title>
+		<link rel="stylesheet" href="../static/css/super_admin/page.css">
+		<link href="../static/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../static/css/bootstrap-select.css">
+	</head>
+	<body style="background-color:#F2F2F2;">
+		{% include 'model/superAdmin/menu' %}
+		<div class="top">
+			<div class="leftTiyle" id="flTitle">项目管理员权限管理</div>
+			<div class="thisUser">当前用户：{{current_user.user}}&nbsp&nbsp<a href="/user/loginout">退出</a></div>
+		</div>
+		<div class="content">
+			<div >
+                <form class="form-inline pull-left" method="POST">
+				<label >管理员查询: </label>
+                                <select class="form-control" id="checkout_company">
+                                    {% for c in data['companys'] %}
+                                  <option value="{{c.id}}">{{c.name}}</option>
+                                    {% endfor %}
+                                </select>
+			</form>
+				<br>
+				<br>
+				 <form class="form-inline pull-left" id="add_user_form" action="up_user_status" method="GET">
+
+                            <div class="form-group">
+                                  <label >管理员提权: </label>
+                                <select  class="form-control" id="company">
+                                    {% for c in data['companys'] %}
+                                  <option value="{{c.id}}">{{c.name}}</option>
+                                    {% endfor %}
+                                </select>
+                              </div>
+                              <div class="form-group">
+                                <select  class="form-control" id="department">
+                                    <option value="">==请选择部门==</option>
+                                    {% if data['company']:%}
+                                    {% for d in data['company'].get_valid_departments()%}
+                                  <option value="{{d.id}}">{{d.name}}</option>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                </select>
+                              </div>
+                              <div class="form-group">
+                                <select class="selectpicker "  name="user_id" id="userselect" title="==请选择员工==">
+                                </select>
+                              </div>
+                            <input class="hidden" name="status" type="text" value="100">
+                            <button type="submit"  id="submit_add_user" class="btn btn-success">添加管理员</button>&nbsp
+                        </form>
+				<br><br>
+
+                <form class="form-inline pull-left" id="add_admin_form" action="register_admin" method="POST">
+
+                            <div class="form-group">
+                                  <label >新增管理员: </label>
+                                <select class="form-control " name="company_id" id="company_select">
+                                    {% for c in data['companys'] %}
+                                  <option value="{{c.id}}">{{c.name}}</option>
+                                    {% endfor %}
+                                </select>
+                              </div>
+                              <div class="form-group">
+                                <input type="text" name="user" class="form-control" placeholder="请输入姓名">
+                                  <input type="text" name="pass" class="form-control" placeholder="请输入密码" value="000000">
+                              </div>
+                            <button type="submit" id="submit_add_admin" class="btn btn-success">添加管理员</button>&nbsp
+
+                        </form>
+                <br><br>
+
+			</div>
+			<div>
+				<table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>管理员名称</th>
+							<th>所属部门</th>
+							<th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for a in data['admins'] %}
+                        <tr>
+                          <th scope="row">{{loop.index}}</th>
+                          <td>{{a.user}}</td>
+							<td>{{a.department.name}}</td>
+                             <td><a href="up_user_status?user_id={{a.id}}&status=0" onClick="return confirm('数据将无法找回，确定删除?');"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button></a>
+
+							 </td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+
+				</table>
+				<br>
+
+			</div>
+		</div>
+
+	</body>
+	<script type="text/javascript" src="../static/scripts/jquery-2.1.4.min.js" ></script>
+	<script type="text/javascript" src="../static/scripts/superuserindex.js" ></script>
+	<script src="../static/scripts/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../static/scripts/bootstrap-select.js"></script>
+	<script>$(".{{data['menu']}}").addClass("active")</script>
+    <script>
+
+        $("#submit_add_user").click(function(){
+            //var users = $("#userselect").val()
+            //window.location.href="addprojectuser?project_id="+project_id+"&users="+users
+
+        })
+
+        $("#department").bind("change",function(){
+            var department_id = $(this).val();
+            if(department_id==-''){
+                $("#userselect").html("")
+
+                $('.selectpicker').selectpicker('refresh');
+                return
+            }
+
+            $.post("/api/get_user",
+            {
+              department_id:department_id,
+              type:1,
+            },
+            function(data,status){
+               if(status=='success'){
+                    var obj = JSON.parse(data);
+                    if(obj.status == true){
+                        var n = obj.user.length
+                        $("#userselect").html("")
+                        for (var i=0;i<n;i++)
+                        {
+                        $("#userselect").append("<option value='"+obj.user[i].id+"'>"+obj.user[i].name+"</option>");
+                        }
+                    }else{
+                        alert(obj.message)
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+               }
+            });
+        });
+
+         $("#checkout_company").bind("change",function(){
+            var company_id = $(this).val();
+            window.location.href="?company_id="+company_id
+         })
+
+        $("#company").bind("change",function(){
+            var company_id = $(this).val();
+            if(company_id==''){
+                $("#userselect").html("")
+                $("#userselect").append("<option value=''>==请选择员工==</option>");
+                $("#department").html("")
+                $("#department").append("<option value=''>==请选择部门==</option>");
+                return
+            }
+
+        $.post("/api/get_department",
+            {
+              company_id:company_id
+            },
+            function(data,status){
+               if(status=='success'){
+                    var obj = JSON.parse(data);
+                    if(obj.status == true){
+                        var n = obj.departments.length
+                        $("#userselect").html("")
+                        $("#userselect").append("<option value=''>==请选择员工==</option>");
+                        $("#department").html("")
+                        $("#department").append("<option value=''>==请选择部门==</option>");
+                        for (var i=0;i<n;i++)
+                        {
+                        $("#department").append("<option value='"+obj.departments[i].id+"'>"+obj.departments[i].name+"</option>");
+                        }
+                    }else{
+                        alert(obj.message)
+                    }
+               }
+            });
+        });
+    </script>
+</html>

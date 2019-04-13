@@ -1,0 +1,22 @@
+<form class="form-inline">
+    <div class="form-group">
+       <label for="id_select">搜索项目: </label>
+        <select id="id_select" class="selectpicker bla bla bli" multiple data-live-search="true" title="项目搜索...">
+            <optgroup label="我的项目" data-subtext="进行中" data-icon="icon-ok">
+            {% for p in data['projects']%}
+
+                {%if p.status>-1 %}
+            <option value="{{p.id}}">{{p.name}}</option>
+                {%endif%}
+            {% endfor %}
+            </optgroup>
+            <optgroup label="我的项目" data-subtext="已完结" data-icon="icon-ok">
+                {% for p in data['projects']%}
+                {%if p.status==-1 %}
+                <option value="{{p.id}}">{{p.name}}</option>
+                {%endif%}
+                {% endfor %}
+            </optgroup>
+        </select>
+    </div>
+</form>

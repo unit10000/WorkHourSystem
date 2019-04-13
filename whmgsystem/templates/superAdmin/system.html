@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>首页</title>
+		<link rel="stylesheet" href="../static/css/super_admin/page.css">
+		<link href="../static/css/bootstrap.min.css" rel="stylesheet">
+	</head>
+	<body style="background-color:#F2F2F2;">
+		{% include 'model/superAdmin/menu' %}
+		<div class="top">
+			<div class="leftTiyle" id="flTitle">系统环境概况</div>
+			<div class="thisUser">当前用户：{{current_user.user}}&nbsp&nbsp<a href="/user/loginout">退出</a></div>
+		</div>
+		<div class="content">
+			<div class="inf_box"  style="background-color:#666">
+				<label>操作系统: </label>&nbsp{{data["system_inf"]["system"]}}
+			</div>
+			<div class="inf_box"  style="background-color:#F75000">
+				<label>计算机名称: </label>&nbsp{{data["system_inf"]["node"]}}
+			</div>
+			<div class="inf_box" style="background-color:#9F4D95">
+				<label>系统版本: </label>&nbsp{{data["system_inf"]["version"]}}
+			</div>
+			<div class="inf_box" style="background-color:#5A5AAD">
+				<label>处理器架构: </label>&nbsp{{data["system_inf"]["machine"]}}
+			</div>
+			<div class="inf_box" style="background-color:#408080">
+				<label>处理器型号: </label>&nbsp{{data["system_inf"]["processor"]}}
+			</div>
+			<div class="inf_box" style="background-color:#808040">
+				<label>python版本: </label>&nbsp{{data["python_version"]}}
+			</div>
+
+			<div class="inf_box" style="background-color:#804040">
+				<label>CPU逻辑个数: </label>&nbsp{{data["cpu_count_logical"]}}
+			</div>
+
+			<div class="inf_box" style="background-color:#64A600">
+				<label>CPU物理个数: </label>&nbsp{{data["cpu_count"]}}
+			</div>
+			<div class="myChart">
+				<div>
+					<label>可用内存: <span style="background-color:#69D2E7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<label>已用内存: <span style="background-color:#F38630">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+				</div>
+				<canvas id="myChart" width="400" height="400"></canvas>
+			</div>
+
+
+		</div>
+
+	</body>
+	<script type="text/javascript" src="../static/scripts/jquery-2.1.4.min.js" ></script>
+	<script type="text/javascript" src="../static/scripts/superuserindex.js" ></script>
+	<script src="../static/scripts/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../static/scripts/Chart-1.0.1-beta.4.js"></script>
+	<script>
+
+			var data = [
+				{
+					label: "已用内存",
+					value: {{data["virtual_memory"]["used"]/1024/1024}},
+					color:"#F38630"
+				},
+				{
+					label: "可用内存",
+					value : {{data["virtual_memory"]["free"]/1024/1024}},
+					color : "#69D2E7"
+				}
+			];
+
+			var chartPie = null;
+			window.onload = function(){
+				var ctx = document.getElementById("myChart").getContext("2d");
+				chartPie = new Chart(ctx).Pie(data, {segmentShowStroke : false, showTooltips : 1});
+
+				initEvent(chartPie, clickCall);
+			}
+
+			function clickCall(evt) {
+				var segments = chartPie.getSegmentsAtEvent(evt);
+
+				if ( segments.length > 0 ) {
+					var segment = segments[0];
+					//alert( segment.label + ": " + segment.value);
+				}
+			}
+
+			function initEvent(chart, handler) {
+				var method = handler;
+				var eventType = "click";
+				var node = chart.chart.canvas;
+
+				if (node.addEventListener) {
+					node.addEventListener(eventType, method);
+				} else if (node.attachEvent) {
+					node.attachEvent("on" + eventType, method);
+				} else {
+					node["on" + eventType] = method;
+				}
+			}
+		$(".{{data['menu']}}").addClass("active")
+		</script>
+</html>

@@ -1,0 +1,49 @@
+#demoTable td,#demoTable th{
+ 	height:30px;
+ 	width:90px;
+ 	font-family:"Helvetica Neue", "Microsoft Yahei", Arial, sans-serif;
+ 	font-size:12px;
+ 	white-space: nowrap;text-overflow: ellipsis;overflow: hidden;
+
+ }
+table{table-layout:fixed;word-break:break-all;}
+ #demoTable th{
+ 	background: #F2F2F2;
+ 	background-image: linear-gradient(to bottom, #f8f8f8 0%, #ececec 100%);
+ }
+ @media screen and (min-width: 1500px) {
+    #demoTable td,#demoTable th{
+ 	height:30px;
+ 	width:10%;
+ }
+}
+ #demoTable td{
+ 	background:#fff;
+ }
+ .fakeContainer {  
+     margin: 5px 20px 20px 20px;  
+     border: none;                        
+     overflow: hidden;  
+ } 
+ .my_width{
+ 	/*width:100%;*/
+ 	overflow:hidden;
+ 	padding:0 20px;
+ }
+ .first_div{
+ 	display:block;
+ 	margin:0 auto;
+ }
+ /*表格上方查询等功能的样式*/
+ .radius{
+ 	border-radius:8px;
+ }
+ .red_text{
+    color:red;
+ }
+ .blue_text{
+    color:blue;
+ }
+ #demoTable tr:hover td{
+ 	background:#999;
+ }

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+        <title>工时管理系统-bom制作</title>
+        <meta name="keywords" content="侧边导航菜单(可分组折叠)">
+        <meta name="description" content="侧边导航菜单(可分组折叠)" />
+        <meta name="HandheldFriendly" content="True" />
+        <!-- Bootstrap3.3.5 CSS -->
+        <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="../static/css/date.css">
+        <link rel="stylesheet" href="../static/css/bootstrap-select.css">
+        <script>document.write("<link rel='stylesheet' href='../static/css/my_style.css?v=" + Date.now() + "'>");</script>
+        <script src="../static/scripts/html5shiv.min.js"></script>
+        <script src="../static/scripts/respond.min.js"></script>
+
+
+
+
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+
+        <![endif]-->
+        <style>
+            .panel-group{max-height:770px;overflow: auto;}
+            .leftMenu{margin:10px;margin-top:5px;}
+            .leftMenu .panel-heading{font-size:14px;padding-left:20px;height:36px;line-height:36px;color:white;position:relative;cursor:pointer;}/*转成手形图标*/
+            .leftMenu .panel-heading span{position:absolute;right:10px;top:12px;}
+            .leftMenu .menu-item-left{padding: 2px; background: transparent; border:1px solid transparent;border-radius: 6px;}
+            .leftMenu .menu-item-left:hover{background:#C4E3F3;border:1px solid #1E90FF;}
+             .item_list> tr:hover td{
+                background:#F2F2F2!important;
+             }
+        </style>
+
+ <style>
+        table td {
+            font-size: 12px;
+            text-align: center;
+            width:1px;
+            height:34px;
+            background-color: #fff;
+            color: #000;
+            word-wrap:break-word;
+        }
+        table{
+            width:100%;
+            table-layout:fixed;
+        }
+        .title_style{
+            font-weight:bold;
+            background-color:#F2F2F2;
+        }
+        .last_item td{
+                border-left:1px #fff solid;
+                border-right:1px #fff solid;
+                border-bottom:1px #fff solid
+        }
+    </style>
+
+    <style type="text/css">
+    .mask {
+            position: absolute; top: 0px; filter: alpha(opacity=60); background-color: #777;
+            z-index: 1002; left: 0px;
+            opacity:0.5; -moz-opacity:0.5;
+        }
+</style>
+
+    </head>
+    <body style="background-color:#F2F2F2;padding-top:70px">
+
+        <div class="container-fluid">
+            <nav id="nav_top" class="navbar navbar-default navbar-fixed-top">
+              <div class="container">
+                <a class="navbar-brand" href="#">
+                            <img alt="Brand" style="height: 28px" src="../static/images/logo/{{data['company'].logo_file}}">
+                          </a>
+                  <ul class="nav navbar-nav">
+                    <li class=""><a href="selectworktime"><span class="glyphicon glyphicon-pencil"></span>&nbsp工时填报<span class="sr-only">(current)</span></a></li>
+                      <!--<li class=""><a href="selectworktime"><span class="glyphicon glyphicon-search"></span>&nbsp工时查询 </a></li>-->
+                      <li class="active"><a href="makebom"><span class="glyphicon glyphicon-stats"></span>&nbspBOM制作 </a></li>
+                      <!--<li ><a href="/index">返回旧版</span></a></li>-->
+                      <li role="presentation" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                          hello，{{data['user'].user}} <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu user-center">
+                            <li><a href="" data-toggle="modal" data-target="#up_my_pw_model"><span class="glyphicon glyphicon-log-out"></span>&nbsp修改密码</a></li>
+                            <li><a href="loginout"><span class="glyphicon glyphicon-log-out"></span>&nbsp注销账号</a></li>
+                        </ul>
+                      </li>
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right">
+                      <li class=""><a href="/admin"><span class="glyphicon glyphicon-user"></span>&nbsp后台管理 </a></li>
+                   </ul>
+              </div>
+            </nav>
+            <div class="row" >
+                <div class="col-md-1"></div>
+                <div class="col-md-10" style="margin:8px 0px;padding:20px ;border: 1px solid #ddd;background-color:#FFF">
+                    <div>
+                       <div >
+                       <form class="form-inline" >
+                        <!--<label >物料来源：</label>-->
+                        <!--<select class="form-control" id="company">-->
+                            <!--{% for c in data['companys'] %}-->
+                          <!--<option value="{{c.id}}">{{c.name}}</option>-->
+                            <!--{% endfor %}-->
+                        <!--</select>-->
+                       <div class="pull-right" style="margin-bottom:16px;">
+                           <!-- Single button -->
+                            <div class="btn-group">
+                              <button type="button"  class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-folder-open"> </span>&nbsp;<span id="save_button" >文件 </span> <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                  <li><a href="?bom_id=-1"> <span class="glyphicon glyphicon-plus"></span>&nbsp新建</a></li>
+                                  <li role="separator" class="divider"></li>
+                                <li id="excelSave"><a href="#"><span class="glyphicon glyphicon-floppy-saved" ></span> 保存</a></li>
+                                <li id="excelCopy"><a href="#"><span class="glyphicon glyphicon-duplicate" ></span> 另存为</a></li>
+                                <li role="separator" class="divider"></li>
+
+                                  <li><a href="#"  id="excelDow"><span class="glyphicon glyphicon-floppy-save"></span> 导出excel</a></li>
+                                  <li role="separator" class="divider"></li>
+                                  <li><a href="#" data-toggle="modal" data-target="#import_item" ><span class="glyphicon glyphicon-import"></span> 批量导入物料</a></li>
+                              </ul>
+                            </div>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#bom_list_model"><span class="glyphicon glyphicon-list"></span> BOM列表</button>
+                            <a href="delete_bom?bom_id={{data['current_bom'].id}}"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span>&nbsp删除</button></a>
+                       </div>
+                       </form>
+                      </div>
+                        <div style="margin:16px 0px; padding:8px 2px" align="center">
+                        <table cellspacing="0" table_id="{{data['current_bom'].id}}" cellpadding="0" border="1" id="tableToExcel" >
+                            <thead>
+                            <tr>
+                                <td colspan="4" class="title_style"><span style="color:red">*</span>项目名称：</td>
+                                <td colspan="11" class="project_edit">{{data['current_bom'].project_name}}</td>
+                                <td colspan="4" class="title_style"><span style="color:red">*</span>项目编号：</td>
+                                <td colspan="10" class="project_id_edit">{{data['current_bom'].project_id}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="title_style"><span style="color:red">*</span>文件名称：</td>
+                                <td colspan="11" class="is_edit">{{data['current_bom'].file_name}}</td>
+                                <td colspan="4" class="title_style"><span style="color:red">*</span>图号/文件号：</td>
+                                <td colspan="10" class="is_edit">{{data['current_bom'].file_id}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="title_style">物料编码：</td>
+                                <td colspan="11" class="is_edit">{{data['current_bom'].item_num}}</td>
+                                <td colspan="4" class="title_style"><span style="color:red">*</span>版本号：</td>
+                                <td colspan="10" class="is_edit">{{data['current_bom'].version}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="title_style">制表人：</td>
+                                <td colspan="11">{{data['user'].user}} </td>
+                                <td colspan="4" class="title_style">审 核：</td>
+                                <td colspan="10" class="is_edit">{{data['current_bom'].auditing}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="title_style">校    对:  </td>
+                                <td colspan="11" class="is_edit">{{data['current_bom'].proofreading}}</td>
+                                <td colspan="4" class="title_style">批    准：</td>
+                                <td colspan="10" class="is_edit">{{data['current_bom'].approval}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="title_style">会   签：</td>
+                                <td colspan="11" class="is_edit">{{data['current_bom'].signer}}</td>
+                                <td colspan="4" class="title_style ">日    期：</td>
+                                <td colspan="10" class="is_edit date_edit">{{data['current_bom'].date}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="1" class="title_style">序号</td>
+                                <td colspan="3" class="title_style">物料编码</td>
+                                <td colspan="7" class="title_style">名称</td>
+                                <td colspan="4" class="title_style">型号</td>
+                                <td colspan="4" class="title_style">描述</td>
+                                <td colspan="4" class="title_style">安装位号</td>
+                                <td colspan="1" class="title_style">单位</td>
+                                <td colspan="1" class="title_style">数量</td>
+                                <td colspan="3" class="title_style">备注</td>
+                                <td colspan="1" class="title_style">操作</td>
+                            </tr>
+                            </thead>
+                            <tbody class="item_list">
+                            {% for item in data['current_bom'].items%}
+                                    <tr>
+                                <td class="index" colspan="1" >{{item.index}}</td>
+                                <td colspan="3" class="itemNuber_edit">{{item.item_number}}</td>
+                                <td colspan="7" class="name_edit">{{item.name}}</td>
+                                <td colspan="4" class="model_edit">{{item.model}}</td>
+                                <td colspan="4" class="note_edit">{{item.note}}</td>
+                                <td colspan="4" class="is_edit">{{item.install_number}}</td>
+                                <td colspan="1" class="is_edit">{{item.unit}}</td>
+                                <td colspan="1" class="is_edit">{{item.number}}</td>
+                                <td colspan="3" class="is_edit">{{item.remark}}</td>
+                                <td colspan="1" ><a  href="javascript:void(0);" class="delete_item">删除</a></td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="last_item"  style="visibility:hidden;">
+                                <td  style=""></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                         <div class="pull-right" style="width: 160px;">
+                             <!--<label >添加物料: </label> &nbsp<input style="width:10px" id="add_item_rows"  type="text" placeholder="行数"/>&nbsp <a href="javascript:void(0);" id="add_item">添加</a>-->
+
+                                <form class="bs-example bs-example-form" role="form">
+                                    <div class="input-group" >
+                                        <input type="number" id="add_item_rows" style="" value="1" class="form-control text-center">
+                                        <span id="add_item" style="cursor:pointer" class="input-group-addon">添加行</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mask" hidden="hidden"  class="mask" style="padding-top:200px"><div align="center" class="center-block" style="color:#fff;z-index: 1003"><h2>查找中，请稍后。。。</h2></div></div>
+
+        {% include 'model/my_bottom' %}
+        {% include 'model/user/bom_select_project' %}
+        <!--检索列表-->
+        <div id="select_ICitem_div" hidden="hidden"  style="position: absolute;height:200px;z-index:99999;width:400px">
+            <div id="select_ICitem_close_div"  style="color:red;position: absolute;z-index: 99999;top:0px;left:0px;width:20px;cursor:pointer;">✖</div>
+            <div id="select_ICitem"  style="position: absolute; height:200px; overflow:auto;left: 20px;">
+
+            </div>
+
+        </div>
+
+
+
+
+        <!-- bom列表Modal -->
+                    <div class="modal fade" id="bom_list_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="addDepartmentLabel">已建BOM列表</h4>
+                          </div>
+                            <form method="post" action="addepartment">
+                          <div class="modal-body">
+                              <br>
+                              <div class="list-group" style="max-height:400px;min-height:100px; overflow:auto;">
+                                  <!--<a href="#" class="list-group-item active">-->
+                                            <!--我的BOM列表-->
+                                          <!--</a>-->
+                             {% for bom in data['bom_list']%}
+                                      <a href="?bom_id={{bom.id}}" class="list-group-item"><span class="glyphicon glyphicon-file"></span> &nbsp;<span style="color:red">{{bom.date}}</span>【{{bom.file_name}}-{{bom.file_id}}-{{bom.version}}】</a>
+                             {% endfor %}
+                             </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                          </div>
+                            </form>
+                        </div>
+                      </div>
+                    </div>
+
+            <!-- 批量导入物料Modal -->
+                    <div class="modal fade bs-example-modal-lg" id="import_item" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" >批量导入物料(每行一个)</h4>
+                          </div>
+                            <form method="post" action="addepartment">
+                          <div class="modal-body">
+
+                              <div  style="text-align:center">
+                                    <div class="btn-group" role="group" aria-label="...">
+                                      <button type="button" select-type="FNumber" class="btn btn-default select_type active">编号</button>
+                                      <button type="button" select-type="FModel" class="btn btn-default select_type">型号</button>
+                                    </div>
+                              </div>
+                              <br>
+                                <div class="row">
+                                  <div class="col-md-4">
+                                      <label class="control-label">物料<span class="select_type_title red_text">编号</span>:</label>
+                                    <textarea class="form-control" id="item_select_data" select-type="FNumber" rows="10"></textarea>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <label class="control-label">安装位号:</label>
+                                    <textarea class="form-control" id="item_install_num" rows="10"></textarea>
+                                  </div>
+                                  <div class="col-md-4">
+                                      <label class="control-label">数量:</label>
+                                    <textarea class="form-control" id="item_num" rows="10"></textarea>
+                                  </div>
+                                </div>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-success" id="import_items_submit" data-dismiss="modal">批量添加</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                          </div>
+                            </form>
+                        </div>
+                      </div>
+                    </div>
+
+    <!-- 解决物料冲突Modal -->
+                    <div class="modal fade bs-example-modal-lg" id="opt_item" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" >物料冲突</h4>
+                          </div>
+                          <div class="modal-body opt-body" style="max-height:500px;min-height:100px; overflow:auto;">
+
+
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-success" id="import_items" data-dismiss="modal">确定</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+    {% include 'model/user/up_my_pw_model' %}
+    </body>
+        <!-- jQuery1.11.3 (necessary for Bo otstrap's JavaScript plugins) -->
+        <script src="../static/scripts/jquery-2.1.4.min.js"></script>
+        <script src="../static/scripts/schedule.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="../static/scripts/bootstrap.min.js"></script>
+        <script src="../static/scripts/hullabaloo.js"></script>
+        <script type="text/javascript" src="../static/scripts/bootstrap-select.js"></script>
+        <script src="../static/scripts/particles.js"></script>
+        <!--<script src="../static/scripts/makebom.js"></script>-->
+        <script>document.write("<script type='text/javascript' src='../static/scripts/makebom.js?v=" + Date.now() + "'><\/script>");</script>
+        <script src="../static/scripts/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+
+    //兼容火狐、IE8
+    //显示遮罩层
+    function showMask(){
+        $("#mask").css("height",$(document).height());
+        $("#mask").css("width",$(document).width());
+        $('html,body').addClass('ovfHiden');
+        $("#mask").fadeIn();
+        var tmid = window.setTimeout("hideMask()", 30000);
+    }
+    //隐藏遮罩层
+    function hideMask(){
+        $('html,body').removeClass('ovfHiden');
+        $("#mask").fadeOut();
+    }
+    $("#mask").hide();
+</script>
+
+<script type="text/javascript">
+
+    var fixHelperModified = function(e, tr) {//设置tr可以拖动
+    var $originals = tr.children();
+    var $helper = tr.clone();
+    $helper.children().each(function(index) {
+        $(this).width($originals.eq(index).width())
+    });
+    return $helper;
+    },
+        updateIndex = function(e, ui) {
+            $('tr.last_item', ui.item.parent()).each(function (i) {//将占位td移动到最后
+                $(this).appendTo("#tableToExcel tbody")
+            });
+
+            $('td.index', ui.item.parent()).each(function (i) {//进行index排序
+                $(this).html(i + 1);
+            });
+        };
+    $("#tableToExcel tbody").sortable({
+        helper: fixHelperModified,
+        stop: updateIndex
+    }).disableSelection();
+    //弹出提示
+     $.hulla = new hullabaloo();
+
+
+    setTimeout(function() {
+      $.hulla.send("物料可根据编码、名称、型号、描述进行检索", "info");
+    }, 3000);
+
+    setTimeout(function() {
+      $.hulla.send("物料可自由拖动进行排序", "info");
+    }, 1000);
+
+    //绑定项目搜索事件
+    $(".selectpicker").bind("change",function(){
+            var project_id = this.value
+            $(".project_id_edit").html(project_id)
+            $(".selectpicker").blur(function(){
+              var project_name = $(".filter-option").text()
+              $(".project_edit").html(project_name)
+              $("#bom_select_project").hide()
+            });
+     });
+     //页面初始化
+        window.onload = function(){
+    　　$(".date_edit").html(get_nowtime())
+    }
+    //添加物料事件
+    $("#add_item").click(function(){
+        var number = $("#add_item_rows").val()
+        install_items(number)
+    });
+    function install_items(number){
+        for(var i = 0 ; i < number; i++){
+            install_item('','','','','','1','')
+        }
+        refurbish()//添加完后绑定事件
+        $('.last_item').prev().children("td.model_edit").trigger("click")
+    }
+    function install_item(item_number,name,model,note,install_num,num,beizhu){
+        var index = $(".item_list").children().length
+        $(".last_item").before('<tr>'+
+                                '<td class="index" colspan="1" >'+index+'</td>'+
+                                '<td colspan="3" class="itemNuber_edit">'+item_number+'</td>'+
+                                '<td colspan="7" class="name_edit">'+name+'</td>'+
+                                '<td colspan="4" class="model_edit">'+model+'</td>'+
+                                '<td colspan="4" class="note_edit">'+note+'</td>'+
+                                '<td colspan="4" class="is_edit">'+install_num+'</td>'+
+                                '<td colspan="1" class="is_edit">PCS</td>'+
+                                '<td colspan="1" class="is_edit">'+num+'</td>'+
+                                '<td colspan="3" class="is_edit">'+beizhu+'</td>'+
+                                '<td colspan="1" ><a  href="javascript:void(0);" class="delete_item">删除</a></td>'+
+                            '</tr>');
+    }
+    $("#excelDow").click(function(){
+        excel_utils.download()
+    });
+    $("#import_items_submit").click(function(){
+        showMask()
+        $.post("/api/select_icitems",
+      {
+        select_data:$("#item_select_data").val(),
+        install_num:$("#item_install_num").val(),
+        item_num:$("#item_num").val(),
+        select_type:$("#item_select_data").attr("select-type")
+      },
+      function(data,status){
+        hideMask();
+        switch (status){
+            case 'success':
+            var jsonObj = JSON.parse(data);
+            if(jsonObj.status){
+                icitem_list.install_items(jsonObj.items)
+            }else{
+                $.hulla.send(jsonObj.message, "danger");
+            }
+            break;
+        }
+
+      });
+    })
+    $("#excelSave").click(function(){
+        excel_utils.save_bom()
+
+    });
+    $("#excelCopy").click(function(){
+        excel_utils.copy_bom()
+    });
+    $(".select_type").click(function(){
+        $(".select_type").removeClass("active");
+        $(this).addClass("active");
+        $(".select_type_title").html($(this).html())
+        $("#item_select_data").attr("select-type",$(this).attr("select-type"))
+    });
+    //添加关闭检索结果
+    $("#select_ICitem_close_div").click(function(){
+        icitem_list.hide()
+    });
+        </script>
+        <script>document.write("<script type='text/javascript' src='../static/scripts/my_script.js?v=" + Date.now() + "'><\/script>");</script>
+</html>

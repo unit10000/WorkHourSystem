@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+        <title>工时管理系统-工时查询</title>
+        <meta name="keywords" content="侧边导航菜单(可分组折叠)">
+        <meta name="description" content="侧边导航菜单(可分组折叠)" />
+        <meta name="HandheldFriendly" content="True" />
+        <!-- Bootstrap3.3.5 CSS -->
+        <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="../static/css/date.css">
+        <link rel="stylesheet" href="../static/css/bootstrap-select.css">
+        <script>document.write("<link rel='stylesheet' href='../static/css/my_style.css?v=" + Date.now() + "'>");</script>
+        <script>document.write("<link rel='stylesheet' href='../static/css/superTables.css?v=" + Date.now() + "'>");</script>
+        <script>document.write("<link rel='stylesheet' href='../static/css/tableStyle.css?v=" + Date.now() + "'>");</script>
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="../static/scripts/html5shiv.min.js"></script>
+        <script src="../static/scripts/respond.min.js"></script>
+        <![endif]-->
+        <style>
+            .panel-group{max-height:770px;overflow: auto;}
+            .leftMenu{margin:10px;margin-top:5px;}
+            .leftMenu .panel-heading{font-size:14px;padding-left:20px;height:36px;line-height:36px;color:white;position:relative;cursor:pointer;}/*转成手形图标*/
+            .leftMenu .panel-heading span{position:absolute;right:10px;top:12px;}
+            .leftMenu .menu-item-left{padding: 2px; background: transparent; border:1px solid transparent;border-radius: 6px;}
+            .leftMenu .menu-item-left:hover{background:#C4E3F3;border:1px solid #1E90FF;}
+        </style>
+        <link rel="stylesheet" href="../static/css/my_particles.css">
+    </head>
+    <body style="background-color:#F2F2F2;padding-top:70px">
+
+        {% include 'model/my_particles' %}
+        <div class="container-fluid">
+            <nav id="nav_top" class="navbar navbar-default navbar-fixed-top">
+              <div class="container">
+                  <a class="navbar-brand" href="#">
+                    <img alt="Brand" style="height: 28px" src="../static/images/logo/{{data['company'].logo_file}}">
+                  </a>
+                  <ul class="nav navbar-nav">
+                    <li class="active"><a href="selectworktime"><span class="glyphicon glyphicon-pencil"></span>&nbsp工时填报<span class="sr-only">(current)</span></a></li>
+                      <!--<li class="active"><a href="selectworktime"><span class="glyphicon glyphicon-search"></span>&nbsp工时查询 </a></li>-->
+                      <li class=""><a href="makebom"><span class="glyphicon glyphicon-stats"></span>&nbspBOM制作 </a></li>
+                      <li role="presentation" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                          hello，{{data['user'].user}} <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu user-center">
+                            <li><a href="" data-toggle="modal" data-target="#up_my_pw_model"><span class="glyphicon glyphicon-log-out"></span>&nbsp修改密码</a></li>
+                            <li><a href="loginout"><span class="glyphicon glyphicon-log-out"></span>&nbsp注销登陆</a></li>
+                        </ul>
+                      </li>
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right">
+                      <li class=""><a href="/admin"><span class="glyphicon glyphicon-user"></span>&nbsp后台管理 </a></li>
+                   </ul>
+              </div>
+            </nav>
+            <div class="row" >
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                     <div>
+                         <form class="form-inline">
+                        <label for="id_select">起始日期: </label>
+                         <div class="input-group">
+                         <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-calendar"></span></span>
+                             <input style="color: red" id="date1" value="{{data['startime']}}" class="form-control" type="text" name="date" readonly="readonly" placeholder="点击选择日期"/></div>&nbsp&nbsp&nbsp&nbsp
+                         <label for="id_select">结束日期: </label><div class="input-group">
+                             <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span><input style="color: red" id="date2" value="{{data['endtime']}}" class="form-control" type="text" name="date" readonly="readonly" placeholder="点击选择日期"/></div>&nbsp&nbsp
+                             &nbsp<button type="button" name="" data-toggle="tooltip" data-placement="top" title="显示所选范围内的工时" value="查询工时" onClick="selectSubmit()" class="btn btn-success"><span class="glyphicon glyphicon-search"></span>&nbsp查询</button>
+                             </form>
+                         <br>
+                       <br>
+                    </div>
+                    <label for="id_select">{{data['startime']}} 至 {{data['endtime']}} 所有项目工时<span style="color:red"></span> （小时）：</label><br>
+                    {% include 'model/user/project_table' %}
+                    <br>
+                    <!--<div style="width:100%;overflow:auto;background-color:#fff;padding:20px 10px;" >-->
+                        <!--<canvas id="myChart"  height="400"></canvas>-->
+                    <!--</div>-->
+            </div>
+        </div>
+    <script src="../static/scripts/particles.js"></script>
+    <script src="../static/scripts/my_particlesconf_black.js"></script>
+    </div>
+        <br><br>
+                    <br><br>
+                    <br><br>
+
+                    <br><br>
+    {% include 'model/inputDateTime' %}
+    {% include 'model/my_bottom' %}
+    {% include 'model/user/up_my_pw_model' %}
+    </body>
+        <!-- jQuery1.11.3 (necessary for Bo otstrap's JavaScript plugins) -->
+        <script src="../static/scripts/jquery-2.1.4.min.js"></script>
+        <script src="../static/scripts/schedule.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="../static/scripts/bootstrap.min.js"></script>
+        <script src="../static/scripts/hullabaloo.js"></script>
+        <script type="text/javascript" src="../static/scripts/bootstrap-select.js"></script>
+        <script>document.write("<script type='text/javascript' src='../static/scripts/superTables.js?v=" + Date.now() + "'><\/script>");</script>
+        <script>document.write("<script type='text/javascript' src='../static/scripts/my_inputDate.js?v=" + Date.now() + "'><\/script>");</script>
+        <script type="text/javascript" src="../static/scripts/Chart-1.0.1-beta.4.js"></script>
+    <script>
+
+        $.hulla = new hullabaloo();
+        setTimeout(function() {
+          $.hulla.send("Hi！在这里可以管理您的所有工时！", "success");
+        }, 1000);
+
+        {% set work_hours_map = marge_work_hours(data['work_hours'],data['date_list']) %}
+        function selectSubmit(){
+            var startime = $("#date1").val()
+            var endtime = $("#date2").val()
+            window.location.href="selectworktime?project_id={{data["current_project"].id}}&startime="+startime+"&endtime="+endtime;
+        }
+    $(".selectpicker").bind("change",function(){
+            var pid = this.value
+            var startime = $("#date1").val()
+            var endtime = $("#date2").val()
+             window.location.href="selectworktime?project_id="+pid+"&startime="+startime+"&endtime="+endtime;
+        });
+                    $(window).on('load', function () {
+                        $('.selectpicker').selectpicker({
+                            'selectedText': 'cat'
+                        });
+                    });
+     $("#tableScreen_button").click(function(){
+            if(tableScreen.status){
+                //  退出
+                tableScreen.out();
+            }else{
+                //  全屏
+                tableScreen.in();
+                var height = window.screen.height
+                var width =  window.screen.width
+                setScreenSize(height,width)
+
+            }
+            //test.out();
+        });
+
+        //监听退出全屏事件
+        window.onresize = function() {
+            if (!tableScreen.status) {
+                //要执行的动作
+                setScreenSize(500,"100%")
+                tableScreen.status = false;
+            }
+        }
+
+        </script>
+
+    <script>document.write("<script type='text/javascript' src='../static/scripts/my_script.js?v=" + Date.now() + "'><\/script>");</script>
+    <script src="../static/scripts/fullScreen.js"></script>
+
+<script type="text/javascript">
+        //此处调用superTables.js里需要的函数
+        window.onload=function(){
+            new superTable("demoTable", {cssSkin : "sDefault",
+                fixedCols : 2, //固定几列
+                headerRows :1,  //头部固定行数
+                onStart : function () {
+                   this.start = new Date();
+                },
+                onFinish : function () {
+                }
+            });
+            setScreenSize(500,"100%")
+            //目前谷歌  ie8+  360浏览器均没问题  有些细小的东西要根据项目需求改
+            //有兼容问题的话可以在下面判断浏览器的方法里写
+            if(navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion.match(/9./i)=="9.")
+            {//alert("IE 9.0");
+
+            }else if (!!window.ActiveXObject || "ActiveXObject" in window){//alert("IE 10");
+
+            }else{//其他浏览器
+                //alert("其他浏览器");
+            }
+        }
+        var tableScreen = new FullScreen("#div_container");
+        //getWeekend(date_array.myReplace("-",""))
+    </script>
+    <script>document.write("<script type='text/javascript' src='../static/scripts/workHoursTable.js?v=" + Date.now() + "'><\/script>");</script>
+</html>

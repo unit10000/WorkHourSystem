@@ -1,0 +1,42 @@
+
+<div id="div_container" style="text-align:center;margin:0 auto;background-color:#FFF">
+	<div id="my_div" class="fakeContainer first_div" style="padding:1px">
+		<table border="1" id="demoTable" style="margin-top:5px;border-collapse: collapse;">
+			<tr id="my_tr" class="my_title">
+			    <th class="center" colspan="1">项目\日期</th>
+			    <th class="center" colspan="1">总计(小时)</th>
+			    {% for date in data["date_list"] %}
+				<th class="center" colspan="1" date="{{date['date']}}">{{date['date']}}<div style="text-align:center;">星期{{date['weekday']}}</div></th>
+				{% endfor %}
+			</tr>
+            {% for project in data["projects"] %}
+            {% if project.status>-1  %}
+			<tr project_id="{{project.id}}">
+				<td class="center"  id="td">{{project.name}}</td>
+                {% set work_hours = current_user.get_work_hours(project.id,data['startime'],data['endtime'])%}
+				<td class="center sumColumnWorkHour">{{sum_work_hours(work_hours)}}</td>
+                {% set work_hours_map = marge_work_hours(work_hours,data["date_list"]) %}
+				{% for h in work_hours_map.values() %}
+                   {% if data['current_date'] == loop.index %}
+                        <td class="center  red_text work_hour" style="background:#FFFF00">{{h}}</td>
+                   {% else  %}
+                        <td class="center red_text work_hour">{{h}}</td>
+                   {% endif %}
+				{% endfor %}
+			</tr>
+			 {%endif%}
+            {% endfor %}
+            <tr>
+				<td class="center" id="td">总计：(小时)</td>
+				<td class="center sum_work_hours blue_text" id="td">0</td>
+				{% for date in data["date_list"] %}
+
+				<td class="center sum_work_hours blue_text" colspan="1">0</td>
+				{% endfor %}
+			</tr>
+
+
+		</table>
+		<span class="glyphicon glyphicon-fullscreen" id="tableScreen_button" data-toggle="tooltip" data-placement="top" title="全屏/退出全屏"></span>
+	</div>
+</div>
