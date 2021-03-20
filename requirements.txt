@@ -39,7 +39,7 @@ html5lib==0.9999999
 idna==2.7
 iso8601==0.1.12
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.11.3
 jsonpath==0.80
 kiwisolver==1.0.1
 macholib==1.9
