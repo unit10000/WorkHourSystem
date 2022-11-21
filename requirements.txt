@@ -77,7 +77,7 @@ shellescape==3.4.1
 six==1.11.0
 SQLAlchemy==1.2.14
 tensorboard==1.6.0
-tensorflow==1.6.0
+tensorflow==2.9.3
 termcolor==1.1.0
 urllib3==1.23
 visitor==0.1.3
